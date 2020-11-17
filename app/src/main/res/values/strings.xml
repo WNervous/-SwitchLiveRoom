@@ -1,0 +1,15 @@
+<resources>
+   <string name="app_name">VoiceLiveDemo</string>
+   <array name="colors_array" >
+      <item>DA7903</item>
+      <item>2F9FD3</item>
+      <item>7E46615F</item>
+      <item>90D22EDD</item>
+      <item>A3B3DA03</item>
+      <item>A9DA1C03</item>
+      <item>9E57092B</item>
+      <item>2EAFA3</item>
+      <item>7D64D3</item>
+      <item>BE2CE39A</item>
+   </array>
+</resources>
