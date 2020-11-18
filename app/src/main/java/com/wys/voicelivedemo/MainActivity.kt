@@ -1,5 +1,6 @@
 package com.wys.voicelivedemo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,11 @@ class MainActivity : AppCompatActivity() {
         floatButton.setOnClickListener {
             RoomActivity.open(this@MainActivity)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        sendBroadcast(Intent("close_room_activity"))
     }
 
     override fun onResume() {

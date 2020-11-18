@@ -13,6 +13,7 @@ import com.wys.voicelivedemo.adapter.RoomCoverAdapter
 import com.wys.voicelivedemo.broadcast.FinishActivity
 import com.wys.voicelivedemo.broadcast.MyBroadcast
 import com.wys.voicelivedemo.data.Room
+import kotlinx.android.synthetic.main.activity_room.closeRoom
 import kotlinx.android.synthetic.main.activity_room.coverRecyclerView
 
 /**
@@ -78,6 +79,10 @@ class RoomActivity : AppCompatActivity() {
             }
         })
         coverRecyclerView.scrollToPosition(Int.MAX_VALUE / 2)
+        closeRoom.setOnClickListener {
+            RoomManger.room = null
+            finish()
+        }
     }
 
     private fun register() {
@@ -86,6 +91,7 @@ class RoomActivity : AppCompatActivity() {
         myBroadcast = MyBroadcast(object : FinishActivity {
             override fun finishAct() {
                 Log.d(TAG, "FinishActivity")
+                RoomManger.room = null
                 finish()
             }
         })

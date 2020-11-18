@@ -18,4 +18,13 @@
        app:layout_constraintTop_toTopOf="parent"
        />
 
+   <ImageView
+       android:id="@+id/closeRoom"
+       app:layout_constraintRight_toRightOf="parent"
+       app:layout_constraintTop_toTopOf="parent"
+       android:src="@android:drawable/ic_menu_close_clear_cancel"
+       android:padding="10dp"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
