@@ -27,6 +27,7 @@ import java.util.TimerTask
 class RoomFragment : Fragment() {
     private lateinit var chatAdapter: RoomChatAdapter
     private var room: Room? = null
+    private lateinit var timer: Timer
 
     companion object {
         const val KEY_ROOM = "key_room"
@@ -67,6 +68,13 @@ class RoomFragment : Fragment() {
                 }
             }
         }
-        Timer().schedule(task, 1000, 3000)
+        timer = Timer()
+        timer.schedule(task, 1000, 3000)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        timer.purge()
+        timer.cancel()
     }
 }
