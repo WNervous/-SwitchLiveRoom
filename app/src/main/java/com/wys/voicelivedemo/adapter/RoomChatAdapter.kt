@@ -31,7 +31,7 @@ class RoomChatAdapter : RecyclerView.Adapter<RoomChatHolder>() {
         holder.itemView.message.text = mutList[position]
     }
 
-    public fun addMessage() {
+    fun addMessage() {
         mutList.add("小明：大家好!!!")
         notifyDataSetChanged()
     }

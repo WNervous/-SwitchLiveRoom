@@ -13,6 +13,8 @@ import kotlinx.android.synthetic.main.fragment_room.bgImg
 import kotlinx.android.synthetic.main.fragment_room.chatRecycleView
 import kotlinx.android.synthetic.main.fragment_room.roomTitle
 import kotlinx.android.synthetic.main.fragment_room.sendMessage
+import java.util.Timer
+import java.util.TimerTask
 
 /**
  * <pre>
@@ -45,6 +47,7 @@ class RoomFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         room = arguments?.getParcelable(KEY_ROOM)
         initView()
+        RoomManger.room = room
     }
 
     private fun initView() {
@@ -56,5 +59,14 @@ class RoomFragment : Fragment() {
         sendMessage.setOnClickListener {
             chatAdapter.addMessage()
         }
+
+        val task = object : TimerTask() {
+            override fun run() {
+                activity?.runOnUiThread {
+                    chatAdapter.addMessage()
+                }
+            }
+        }
+        Timer().schedule(task, 1000, 3000)
     }
 }

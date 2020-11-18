@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.item_cover.view.roomCover
  *     version: 1.0
  * </pre>
  */
-class RoomCoverAdapter(val supportFragmentManager: FragmentManager) : RecyclerView.Adapter<CoverHolder>() {
+class RoomCoverAdapter(private val supportFragmentManager: FragmentManager) : RecyclerView.Adapter<CoverHolder>() {
 
     private val colors = arrayOf(Color.BLACK, Color.BLUE, Color.GREEN)
     private var fragment: RoomFragment? = null
@@ -37,6 +37,7 @@ class RoomCoverAdapter(val supportFragmentManager: FragmentManager) : RecyclerVi
         holder.itemView.roomCover.setBackgroundColor(colors[position % colors.size])
         if (currentPage == position) {
             supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment!!).commitAllowingStateLoss()
+            // 可以通过添加动画使效果更加平滑
             holder.itemView.roomCover.visibility = View.GONE
         } else {
             holder.itemView.roomCover.visibility = View.VISIBLE

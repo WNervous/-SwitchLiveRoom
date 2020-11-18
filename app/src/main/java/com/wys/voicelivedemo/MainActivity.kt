@@ -1,10 +1,12 @@
 package com.wys.voicelivedemo
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.wys.voicelivedemo.adapter.RoomAdapter
 import com.wys.voicelivedemo.data.Room
+import kotlinx.android.synthetic.main.activity_main.floatButton
 import kotlinx.android.synthetic.main.activity_main.recyclerView
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +27,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        floatButton.visibility = View.GONE
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = RoomAdapter(list)
+        floatButton.setOnClickListener {
+            RoomActivity.open(this@MainActivity)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        floatButton.let {
+            it.visibility = if (RoomManger.room == null) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+        }
     }
 }

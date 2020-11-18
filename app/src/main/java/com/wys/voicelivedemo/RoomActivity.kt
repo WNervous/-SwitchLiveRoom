@@ -2,6 +2,7 @@ package com.wys.voicelivedemo
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.wys.voicelivedemo.adapter.RoomCoverAdapter
+import com.wys.voicelivedemo.broadcast.FinishActivity
+import com.wys.voicelivedemo.broadcast.MyBroadcast
 import com.wys.voicelivedemo.data.Room
 import kotlinx.android.synthetic.main.activity_room.coverRecyclerView
 
@@ -26,6 +29,7 @@ class RoomActivity : AppCompatActivity() {
     lateinit var adapter: RoomCoverAdapter
     var index = 0
     private var currentCompletePage = Int.MAX_VALUE / 2
+    private lateinit var myBroadcast: MyBroadcast
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_room)
@@ -33,6 +37,7 @@ class RoomActivity : AppCompatActivity() {
         index = intent.getIntExtra(KEY_INDEX, 0)
         Log.d("RoomActivity", "roomlist size:${roomList.size}  index=$index")
         initView()
+        register()
     }
 
     private fun initView() {
@@ -75,6 +80,49 @@ class RoomActivity : AppCompatActivity() {
         coverRecyclerView.scrollToPosition(Int.MAX_VALUE / 2)
     }
 
+    private fun register() {
+        val intent = IntentFilter()
+        intent.addAction("close_room_activity")
+        myBroadcast = MyBroadcast(object : FinishActivity {
+            override fun finishAct() {
+                Log.d(TAG, "FinishActivity")
+                finish()
+            }
+        })
+        registerReceiver(myBroadcast, intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        Log.e(TAG, "onNewIntent")
+        if (intent == null) {
+            return
+        }
+        index = intent.getIntExtra(KEY_INDEX, 0)
+        // == -1 说明是相同的直播间
+        if (index == -1) {
+            return
+        }
+        roomList = intent.getParcelableArrayListExtra(KEY_ROOM)
+        currentCompletePage = Int.MAX_VALUE / 2
+        if (roomList.isEmpty()) {
+            return
+        }
+        if (RoomManger.isSameRoom(room1 = roomList[index])) {
+            return
+        }
+        adapter.setFragment(RoomFragment.newInstance(roomList[index]), currentCompletePage)
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(myBroadcast)
+    }
+
     companion object {
         const val KEY_ROOM = "key_room"
         const val KEY_INDEX = "key_index"
@@ -83,6 +131,13 @@ class RoomActivity : AppCompatActivity() {
             Intent(context, RoomActivity::class.java).let {
                 it.putParcelableArrayListExtra(KEY_ROOM, room)
                 it.putExtra(KEY_INDEX, index)
+                context.startActivity(it)
+            }
+        }
+
+        fun open(context: Context) {
+            Intent(context, RoomActivity::class.java).let {
+                it.putExtra(KEY_INDEX, -1)
                 context.startActivity(it)
             }
         }
